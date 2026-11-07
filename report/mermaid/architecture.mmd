@@ -1,0 +1,45 @@
+graph LR
+    %%% Generate with command:
+    %%% `mmdc -i report/mermaid/architecture.mmd -o report/img/architecture.pdf`
+    %%%
+    %%% Preview on https://mermaid.live/
+
+    users["Users"]
+    staff["Staff"]
+
+    users --> |Submit survey via HTTPS| cloud_run
+    staff --> |Query by ID via HTTPS| cloud_run
+    staff --> |Request report| cloud_run
+
+    subgraph google_cloud["Google Cloud"]
+        direction LR
+
+        subgraph app["APP"]
+            direction TB
+
+            cloud_run["Cloud Run Service <br /> Survey API & staff queries"]
+            cloud_scheduler["Cloud Scheduler"]
+            cloud_run_job["Cloud Run Job <br /> Generate daily report"]
+        end
+
+        subgraph data["Data"]
+            direction TB
+
+            cloud_sql@{shape: cyl, label: "Cloud SQL"}
+            cloud_storage@{shape: cyl, label: "Cloud Storage"}
+        end
+
+        subgraph backup["Backup"]
+            cross_regions_backup@{shape: cyl, label: "Cross-Region Backup"}
+        end
+    end
+
+    cloud_run --> |Insert and query data|cloud_sql
+    cloud_run --> |Retrieve report| cloud_storage
+    cloud_sql --> |Return query data| cloud_run
+    cloud_scheduler --> |Trigger once per day| cloud_run_job
+    cloud_run_job --> |Read survey data| cloud_sql 
+    cloud_run_job --> |Store generated report| cloud_storage
+
+    cloud_sql --> |Backup| cross_regions_backup
+    cloud_storage --> |Backup| cross_regions_backup
