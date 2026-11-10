@@ -1,0 +1,33 @@
+% !TEX program = xelatex
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}   % 页边距
+\usepackage{booktabs}                 % 表格三条线 \toprule \midrule \bottomrule
+\usepackage{tabularx}                 % 表格自动占满页宽
+\usepackage{array}                    % 定宽列 p{}
+\usepackage{hyperref}                 % 交叉引用可点击
+\usepackage{setspace}
+\usepackage[scheme=plain]{ctex}
+\onehalfspacing                       % 1.5 倍行距
+
+\begin{document}
+
+\section*{A-III. From GFS, MapReduce and Bigtable to Current Cloud Frameworks}
+
+\subsubsection*{Original designs}
+
+GFS is a file system designed for storing large-scale data. 
+In practice, storing massive files often presents challenges: 
+a single machine may lack sufficient capacity, the hardware used is typically inexpensive, and disks are prone to failure. 
+To address the issue of capacity limitations on individual machines, GFS divides large files into smaller chunks. 
+These chunks are distributed across the system, allowing each one to be placed, replicated, or migrated independently. 
+Since this fragmentation means that individual machines have no way of knowing where all the parts of a complete file are located, 
+GFS employs a master node that acts as an index, tracking the locations of all chunks and guiding clients to the appropriate machines. 
+Once a client learns the location of a specific chunk, it contacts the corresponding machine to retrieve it. 
+To handle the risk of hardware failure, GFS incorporates a replication mechanism: each chunk is copied across multiple machines. 
+If the master node detects that the number of replicas for a given chunk has fallen below a defined threshold—signaling that a machine has failed—it automatically creates new replicas on other machines, thereby ensuring data reliability.
+
+
+\subsection*{Current successors}
+
+\end{document}
