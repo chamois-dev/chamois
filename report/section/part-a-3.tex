@@ -6,6 +6,7 @@
 \usepackage{tabularx}                 % 表格自动占满页宽
 \usepackage{array}                    % 定宽列 p{}
 \usepackage{hyperref}                 % 交叉引用可点击
+\setlength{\parindent}{0pt}
 \usepackage{setspace}
 \usepackage[scheme=plain]{ctex}
 \onehalfspacing                       % 1.5 倍行距
@@ -26,6 +27,16 @@ GFS employs a master node that acts as an index, tracking the locations of all c
 Once a client learns the location of a specific chunk, it contacts the corresponding machine to retrieve it. 
 To handle the risk of hardware failure, GFS incorporates a replication mechanism: each chunk is copied across multiple machines. 
 If the master node detects that the number of replicas for a given chunk has fallen below a defined threshold—signaling that a machine has failed—it automatically creates new replicas on other machines, thereby ensuring data reliability.
+
+MapReduce is designed to process large-scale datasets that are too vast for a single machine to handle and difficult to partition manually. 
+Since many batch-processing tasks are essentially based on key-value-based aggregation—a process that can be reframed as distributed execution followed by a merge—the MapReduce framework is built around the concepts of map, shuffle, reduce, and task re-execution. 
+Input data is divided into segments, with each segment processed independently by a map function. 
+Every record is transformed into a key-value pair, where the key represents a category and the value is 1. 
+Because each individual task only possesses a local count for its specific segment, the shuffle phase redistributes the intermediate results based on the keys, 
+ensuring that all values ​​associated with the same key are gathered onto a single machine. 
+Once aggregated, the "reduce" phase can access the complete set of values ​​for each key to perform the final summation. 
+Furthermore, the framework incorporates task re-execution: since both map and reduce operations function as pure computations, 
+any task that fails can simply be reassigned to another machine, which will then produce the same result.
 
 
 \subsection*{Current successors}
