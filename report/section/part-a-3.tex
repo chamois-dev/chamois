@@ -17,37 +17,33 @@
 
 \subsubsection*{Original designs}
 
-GFS is a file system designed for storing large-scale data. 
-In practice, storing massive files often presents challenges: 
-a single machine may lack sufficient capacity, the hardware used is typically inexpensive, and disks are prone to failure. 
-To address the issue of capacity limitations on individual machines, GFS divides large files into smaller chunks. 
-These chunks are distributed across the system, allowing each one to be placed, replicated, or migrated independently. 
+GFS was a file system designed for storing large-scale data on thousands of inexpensive machines, where a single machine may lack sufficient capacity and disks are prone to fail routinely in practice. 
+Therefore, files are divided into fixed-size chunks, each of which can be placed, replicated and migrated independently.
 Since this fragmentation means that individual machines have no way of knowing where all the parts of a complete file are located, 
-GFS employs a master node that acts as an index, tracking the locations of all chunks and guiding clients to the appropriate machines. 
-Once a client learns the location of a specific chunk, it contacts the corresponding machine to retrieve it. 
-To handle the risk of hardware failure, GFS incorporates a replication mechanism: each chunk is copied across multiple machines. 
-If the master node detects that the number of replicas for a given chunk has fallen below a defined threshold—signaling that a machine has failed—it automatically creates new replicas on other machines, thereby ensuring data reliability.
+after the client transfers data directly,
+the master node indexes chunk locations and directs clients to the appropriate machine.
+To handle the risk of hardware failure, each chunk is copied across multiple machines.
+When the master detects that replicas have fallen below a threshold, it will recreates them elsewhere.
 
-MapReduce is designed to process large-scale datasets that are too vast for a single machine to handle and difficult to partition manually. 
-Since many batch-processing tasks are essentially based on key-value-based aggregation—a process that can be reframed as distributed execution followed by a merge—the MapReduce framework is built around the concepts of map, shuffle, reduce, and task re-execution. 
-Input data is divided into segments, with each segment processed independently by a map function. 
-Every record is transformed into a key-value pair, where the key represents a category and the value is 1. 
-Because each individual task only possesses a local count for its specific segment, the shuffle phase redistributes the intermediate results based on the keys, 
-ensuring that all values ​​associated with the same key are gathered onto a single machine. 
-Once aggregated, the reduce phase can access the complete set of values ​​for each key to perform the final summation. 
-Furthermore, the framework incorporates task re-execution: since both map and reduce operations function as pure computations, 
-any task that fails can simply be reassigned to another machine, which will then produce the same result.
+MapReduce addressed datasets too vast for a single machine and too difficult to partition manually.
+It targets aggregation by key, and such aggregation is separable, since partial counts computed in different places can be summed latter without changing the total. 
+The input is therefore divided into segments, each handled by a map task.
+In map, every record is transformed into a key-value pair, where the key represents a category and the value is 1. 
+Because each individual task only possesses a local count for its specific segment, the shuffle phase redistributes all values of a key onto a single machine.
+Then, the reduce phase will sum them.
+If a task fails, task re-execution reruns it at other machine, which is safe because of the pure computations of map and reduce.
+
 
 Bigtable is a table organized by keys, supporting a large number of sparse columns, where each cell can store multiple versions of data. 
-It is designed to address the challenge of locating a single record—out of billions of rows—within milliseconds. 
-GFS and MapReduce, which rely on sequential scanning, cannot perform like this. 
-Each row is uniquely identified by a "row key," and the entire table is sorted lexicographically. 
-This ordering allows the table to be partitioned into contiguous ranges distributed across different machines, meaning that locating a specific row simply requires determining which range its key falls into. 
-Column family serves as a physical grouping of columns. 
-Cells belonging to the same family are stored together and treated as a single unit for compression—consequently, column families must be declared when a table is created. 
-However, the individual columns within a family do not need to be predefined. 
-New column names can be introduced at the time of writing, and fields that do not appear in a given row occupy no storage space. 
-Through the use of timestamps, each cell can retain multiple versions, allowing historical changes to the same piece of data to be stored within the same row.
+It was built for a workload that sequential scanning cannot serve, retrieving a single record from billions of rows within milliseconds.
+Rows contain row keys and are stored in lexicographical order. 
+Consequently, a table is partitioned into contiguous ranges distributed across various machines, transforming lookup operations into range lookups rather than full-table scans.
+Column family groups columns into the unit that is stored and compressed as a whole.
+Thus, its set must be fixed when the table is created.
+Columns are not predefined. 
+Instead, a column is created the moment a value is written to it.
+Therefore, fields that are never used in a row do not occupy any space.
+
 
 \subsection*{Current successors}
 
