@@ -37,3 +37,30 @@ Colossus still divides files into blocks and copies them, but it no longer recor
 Spark keeps mapping records and merging them by key while holding intermediate results in memory rather than on disk\cite{sparkdocs}. 
 Cloud Bigtable still stores a table sorted by key with multiple versioned cells, yet the operator no longer administers the cluster\cite{bigtabledocs}. 
 For a designer nowadays, the question is not whether these systems still run, but whether the three organisational choices they established still govern how storage, batch processing and keyed lookup must be separated.
+
+\begin{table}[htbp]
+  \centering
+  \caption{The three original systems and their current successors}
+  \label{tab:a3}
+  \small
+  \begin{tabularx}{\textwidth}{@{}p{2.4cm} p{3.2cm} X X@{}}
+    \toprule
+    Historical system & Current successor or equivalent & What stays the same & What changed \\
+    \midrule
+    GFS (2003) &
+    Colossus &
+    Files are divided into blocks, and copies of each block are kept on several machines. &
+    A chunk's location is no longer recorded by a single node; metadata is now managed in a distributed way. \\
+    \addlinespace
+    MapReduce (2004) &
+    Apache Spark &
+    Records are mapped into key-value pairs by key, and values of the same key are merged. &
+    Intermediate results are held in memory rather than written to disk. \\
+    \addlinespace
+    Bigtable (2006) &
+    Cloud Bigtable &
+    A table sorted by key, with multiple versioned cells per row. &
+    The operator no longer administers the cluster; the provider does. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
