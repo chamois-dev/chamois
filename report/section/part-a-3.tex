@@ -8,15 +8,15 @@ Since this fragmentation means that individual machines have no way of knowing w
 after the client transfers data directly,
 the master node indexes chunk locations and directs clients to the appropriate machine.
 To handle the risk of hardware failure, each chunk is copied across multiple machines.
-When the master detects that replicas have fallen below a threshold, it will recreates them elsewhere.
+When the master detects that replicas have fallen below a threshold, it will recreate them elsewhere.
 
 MapReduce addressed datasets too vast for a single machine and too difficult to partition manually.
-It targets aggregation by key, and such aggregation is separable, since partial counts computed in different places can be summed latter without changing the total. 
+It targets aggregation by key, and such aggregation is separable, since partial counts computed in different places can be summed later without changing the total. 
 The input is therefore divided into segments, each handled by a map task.
 In map, every record is transformed into a key-value pair, where the key represents a category and the value is 1. 
 Because each individual task only possesses a local count for its specific segment, the shuffle phase redistributes all values of a key onto a single machine.
 Then, the reduce phase will sum them.
-If a task fails, task re-execution reruns it at other machine, which is safe because of the pure computations of map and reduce.
+If a task fails, task re-execution reruns it on other machine, which is safe because of the pure computations of map and reduce.
 
 
 Bigtable is a table organized by keys, supporting a large number of sparse columns, where each cell can store multiple versions of data. 
@@ -31,5 +31,9 @@ Therefore, fields that are never used in a row do not occupy any space.
 
 
 \subsection*{Current successors}
-
-\end{document}
+None of GFS, MapReduce or Bigtable was replaced. 
+Each survives in a service that preserves the design while moving part of the work elsewhere. 
+Colossus still divides files into blocks and copies them, but it no longer records a chunk's location in a single node\cite{colossus2021}. 
+Spark keeps mapping records and merging them by key while holding intermediate results in memory rather than on disk\cite{sparkdocs}. 
+Cloud Bigtable still stores a table sorted by key with multiple versioned cells, yet the operator no longer administers the cluster\cite{bigtabledocs}. 
+For a designer nowadays, the question is not whether these systems still run, but whether the three organisational choices they established still govern how storage, batch processing and keyed lookup must be separated.
