@@ -11,7 +11,6 @@ The proposed architecture of the cloud survey platform is shown in Figure~\ref{f
 	\label{fig:cloud-architecture}
 \end{figure}
 
-
 \subsubsection{Separation of the Three Data Components}
 
 Each of the live store, exported files or daily aggregation job bears different responsibilities. 
@@ -67,3 +66,9 @@ None of these systems was inherited. Their positions were taken over and the imp
 		\hline
 	\end{tabular}
 \end{table}
+
+\subsubsection{Selected Service Model and Deployment Model}
+
+The selected service model is PaaS, provided by Google Cloud Run. Under this model, application is packaged as a container deployed by the customer, and Google manages the underlying infrastructure, the operating system, and the runtime. A realistic IaaS alternative is Amazon EC2, which requires the customer to manage the virtual machine, operating system, scaling policy, etc. Amazon EC2 would be suitable if customized operating systems, persistent background processes, or host-level access were required.
+
+In addition, the selected deployment model is public cloud, because the service runs on infrastructure operated by Google Cloud. A realistic alternative is hybrid cloud using an on-premises Kubernetes environment connected to public-cloud services. Public cloud is selected because it moves infrastructure management to the provider and supports rapid, elastic deployment. Hybrid cloud would be more suitable if sensitive information, regulatory requirements, or legacy systems had to remain on organization-controlled infrastructure.
