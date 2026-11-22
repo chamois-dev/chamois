@@ -14,7 +14,8 @@
     in
     {
       devShells.${system}.default = pkgs.mkShell {
-        buildInputs = [
+        buildInputs = with pkgs; [
+          bibtex-tidy
         ];
       };
     };

@@ -5,6 +5,7 @@
 \usepackage[backend=biber,sorting=none,style=apa]{biblatex}
 \addbibresource{main.bib}
 
+\usepackage{longtable}
 \usepackage{pdfpages}
 \usepackage{indentfirst}
 \usepackage{setspace}
@@ -13,6 +14,23 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage{newtxtext}
 \usepackage{newtxmath}
+
+\usepackage{enumitem}
+\usepackage{array}
+\newlist{tableitemize}{itemize}{1}
+\setlist[tableitemize]{
+    label=\textbullet,
+    leftmargin=*,
+    topsep=0pt,
+    partopsep=0pt,
+    itemsep=0pt,
+    parsep=0pt,
+    before=\vspace{-6pt}
+}
+
+\newcolumntype{P}[1]{
+    >{\raggedright\arraybackslash}p{#1}
+}
 
 \title{Title Here}
 \author{Author Here}
@@ -30,6 +48,7 @@
 
 \pagenumbering{arabic}
 % \input{} or content here.
+\input{section/part-b-1.tex}
 
 \thispagestyle{empty}
 \phantomsection
