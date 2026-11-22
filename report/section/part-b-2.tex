@@ -72,3 +72,9 @@ None of these systems was inherited. Their positions were taken over and the imp
 The selected service model is PaaS, provided by Google Cloud Run. Under this model, application is packaged as a container deployed by the customer, and Google manages the underlying infrastructure, the operating system, and the runtime. A realistic IaaS alternative is Amazon EC2, which requires the customer to manage the virtual machine, operating system, scaling policy, etc. Amazon EC2 would be suitable if customized operating systems, persistent background processes, or host-level access were required.
 
 In addition, the selected deployment model is public cloud, because the service runs on infrastructure operated by Google Cloud. A realistic alternative is hybrid cloud using an on-premises Kubernetes environment connected to public-cloud services. Public cloud is selected because it moves infrastructure management to the provider and supports rapid, elastic deployment. Hybrid cloud would be more suitable if sensitive information, regulatory requirements, or legacy systems had to remain on organization-controlled infrastructure.
+
+\subsubsection{Rapid Elasticity and Resilience}
+
+During a campaign peak, Google Cloud Run automatically creates additional container instances according to incoming requests, CPU utilization, and request concurrency. After the campaign traffic decreases, Google Cloud Run removes idle instances, and can scale to zero when no requests remain, to release unnecessary computing capacity.
+
+If an application instance fails, Google Cloud Run stops routing requests to that instance. Other healthy instances continue processing requests, while replacement capacity is created. Since application data is stored externally in Google Cloud SQL rather than inside individual containers, replacing an instance does not cause persistent data loss.
