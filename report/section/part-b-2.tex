@@ -10,3 +10,30 @@ The proposed architecture of the cloud survey platform is shown in Figure~\ref{f
 	\caption{Architecture of the Cloud Survey Platform}
 	\label{fig:cloud-architecture}
 \end{figure}
+
+
+\subsubsection{Separation of the Three Data Components}
+
+Each of the live store, exported files or daily aggregation job bears different responsibilities. 
+Therefore, they are split into three separate parts each implemented by a different service. 
+
+
+Live store is powered by Cloud SQL. 
+Users can retrieve individual records via an ID, allowing the system to locate a specific row directly without needing to scan the entire data table. 
+Data entry is also done on a per-record basis. 
+Each commit operation adds a new row of data to the table.
+
+Exported files are saved by Cloud Storage. 
+This task involves exporting data from a database to a separate file. 
+Once created, the content of this file remains static. 
+Such products do not have a query function. 
+It is only necessary to ensure that their content is complete and readable and can be stored for a long time.
+
+Daily aggregation job is processed by Cloud Run Job. 
+It scans all responses for the day, summarizes the results by category, and does not involve access to individual records. 
+Repeating the process on the same day yielded the same result.
+
+The live store does the work Bigtable did, reaching a record by its key rather than by scanning. 
+Exported files are of the same kind as the files GFS held, complete and never edited after they are written. 
+Counting a day of responses is what MapReduce was built to perform, and Cloud Run Job now carries it out. 
+None of these systems was inherited. Their positions were taken over and the implementations replaced.
