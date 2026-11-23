@@ -34,3 +34,33 @@ The live store does the work Bigtable did, reaching a record by its key rather t
 Exported files are of the same kind as the files GFS held, complete and never edited after they are written. 
 Counting a day of responses is what MapReduce was built to perform, and Cloud Run Job now carries it out. 
 None of these systems was inherited. Their positions were taken over and the implementations replaced.
+
+\begin{table}[H]
+  \centering
+  \caption{The three data components and the roles they occupy}
+  \label{tab:b2-data}
+  \small
+  \renewcommand{\arraystretch}{1.45}
+  \setlength{\tabcolsep}{5pt}
+  {\hyphenpenalty=10000 \exhyphenpenalty=10000
+  \begin{tabular}{|p{3.0cm}|p{3.4cm}|p{5.0cm}|p{2.5cm}|}
+    \hline
+    \textbf{Component} & \textbf{Purpose} & \textbf{Corresponding role} & \textbf{Service} \\
+    \hline
+    Live response store &
+    Fetch or add one response by its identifier &
+    Bigtable. Keyed access to one record, without scanning the table &
+    Cloud SQL \\
+    \hline
+    Exported files &
+    Hold computed output unchanged for review and archiving &
+    GFS. Complete files kept intact and read as a whole &
+    Cloud Storage \\
+    \hline
+    Daily aggregation job &
+    Count a whole day of responses by category &
+    MapReduce. Batch aggregation over a complete dataset &
+    Cloud Run Job \\
+    \hline
+  \end{tabular}}
+\end{table}
