@@ -43,24 +43,27 @@ For a designer nowadays, the question is not whether these systems still run, bu
   \caption{The three original systems and their current successors}
   \label{tab:a3}
   \small
-  \begin{tabularx}{\textwidth}{@{}p{2.4cm} p{3.2cm} X X@{}}
-    \toprule
-    Historical system & Current successor or equivalent & What stays the same & What changed \\
-    \midrule
+  \renewcommand{\arraystretch}{1.45}
+  \setlength{\tabcolsep}{5pt}
+  {\hyphenpenalty=10000 \exhyphenpenalty=10000
+  \begin{tabular}{|p{2.4cm}|p{3.2cm}|p{4.2cm}|p{4.2cm}|}
+    \hline
+    \textbf{Historical system} & \textbf{Current successor or equivalent} & \textbf{What stays the same} & \textbf{What changed} \\
+    \hline
     GFS (2003) &
     Colossus &
     Files are divided into blocks, and copies of each block are kept on several machines. &
     A chunk's location is no longer recorded by a single node; metadata is now managed in a distributed way. \\
-    \addlinespace
+    \hline
     MapReduce (2004) &
     Apache Spark &
     Records are mapped into key-value pairs by key, and values of the same key are merged. &
     Intermediate results are held in memory rather than written to disk. \\
-    \addlinespace
+    \hline
     Bigtable (2006) &
     Cloud Bigtable &
     A table sorted by key, with multiple versioned cells per row. &
     The operator no longer administers the cluster; the provider does. \\
-    \bottomrule
-  \end{tabularx}
+    \hline
+  \end{tabular}}
 \end{table}
