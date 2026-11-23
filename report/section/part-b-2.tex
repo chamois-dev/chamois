@@ -17,18 +17,15 @@ The proposed architecture of the cloud survey platform is shown in Figure~\ref{f
 Each of the live store, exported files or daily aggregation job bears different responsibilities. 
 Therefore, they are split into three separate parts each implemented by a different service. 
 
-
 Live store is powered by Cloud SQL. 
 Users can retrieve individual records via an ID, allowing the system to locate a specific row directly without needing to scan the entire data table. 
 Data entry is also done on a per-record basis. 
 Each commit operation adds a new row of data to the table.
-
 Exported files are saved by Cloud Storage. 
 This task involves exporting data from a database to a separate file. 
 Once created, the content of this file remains static. 
 Such products do not have a query function. 
 It is only necessary to ensure that their content is complete and readable and can be stored for a long time.
-
 Daily aggregation job is processed by Cloud Run Job. 
 It scans all responses for the day, summarizes the results by category, and does not involve access to individual records. 
 Repeating the process on the same day yielded the same result.
