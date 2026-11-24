@@ -1,0 +1,65 @@
+\subsection{B-II Design and justify}
+
+\subsubsection{Architecture Diagram}
+
+\subsubsection{Separation of the Three Data Components}
+
+\subsubsection{OpenStack Alternative}
+
+If company A is required to exclusively use the infrastructure in the future, it can be rebuilt on the OpenStack private cloud. 
+The original architecture remains unchanged, but each layer will be partially replaced.
+Table~\ref{tab:b2-openstack} lists the correspondence and the part each counterpart replaces.
+
+\begin{table}[H]
+  \centering
+  \caption{Components of the current design mapped onto an OpenStack private cloud}
+  \label{tab:b2-openstack}
+  \small
+  \renewcommand{\arraystretch}{1.45}
+  \setlength{\tabcolsep}{5pt}
+  {\hyphenpenalty=10000 \exhyphenpenalty=10000
+  \begin{tabular}{|p{3.0cm}|p{3.0cm}|p{3.5cm}|p{4.3cm}|}
+    \hline
+    \textbf{Current component} & \textbf{Managed service} & \textbf{OpenStack counterpart} & \textbf{Part replaced} \\
+    \hline
+    Application service and entry point &
+    Cloud Run &
+    Nova with Octavia &
+    Execution and request forwarding. Autoscaling must be rebuilt \\
+    \hline
+    Daily aggregation job &
+    Cloud Run Job &
+    A scheduled process on a virtual machine, or Heat &
+    Triggering and execution. Retries must be written \\
+    \hline
+    Live response store &
+    Cloud SQL &
+    Nova with Cinder, self-managed database &
+    Machine and volume. Engine, backup and replication are self-managed \\
+    \hline
+    Export storage &
+    Cloud Storage &
+    Swift &
+    Object interface. Redundancy policy must be planned \\
+    \hline
+    Identity and access &
+    IAM &
+    Keystone &
+    Identity only. Policies and audit must be configured \\
+    \hline
+    Monitoring, logging and backup &
+    Platform provided &
+    No counterpart &
+    Must be built separately \\
+    \hline
+  \end{tabular}}
+\end{table}
+
+Transitioning to a private cloud shifts the scope of operational responsibilities. 
+In a managed service model, a team configures services and monitors metrics, 
+while issues involving the control plane or underlying hardware fall outside their purview. 
+In contrast, in a private cloud, the control plane itself becomes the object that needs to be maintained. 
+Patching, version upgrades, capacity planning, and fault location are all handled by the team itself, 
+and the required skills have expanded from the application layer to virtualization, storage, networking, and databases. 
+Therefore, the additional costs of a private cloud extend well beyond the price difference in raw computing power—they also include the long-term effort required to maintain the platform itself. 
+This investment is only justified when the use of dedicated, exclusive infrastructure becomes a compliance requirement.
