@@ -1,6 +1,6 @@
-\section*{A-III. From GFS, MapReduce and Bigtable to Current Cloud Frameworks}
+\section{A-III. From GFS, MapReduce and Bigtable to Current Cloud Frameworks}
 
-\subsubsection*{Original designs}
+\subsubsection{Original designs}
 
 GFS was a file system designed for storing large-scale data on thousands of inexpensive machines, where a single machine may lack sufficient capacity and disks are prone to fail routinely in practice. 
 Therefore, files are divided into fixed-size chunks, each of which can be placed, replicated and migrated independently.
@@ -30,7 +30,7 @@ Instead, a column is created the moment a value is written to it.
 Therefore, fields that are never used in a row do not occupy any space.
 
 
-\subsection*{Current successors}
+\subsubsection{Current successors}
 None of GFS, MapReduce or Bigtable was replaced. 
 Each survives in a service that preserves the design while moving part of the work elsewhere. 
 Colossus still divides files into blocks and copies them, but it no longer records a chunk's location in a single node\cite{colossus2021}. 
