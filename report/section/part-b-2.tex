@@ -1,0 +1,37 @@
+\subsection{B-II Access Control, Resource Limits, and Personal Data Protection}
+
+Company A's survey system provides a public HTTPS endpoint for
+respondents to submit surveys through the Cloud Run service. Staff
+members must sign in with their company accounts before looking up
+responses or viewing reports. The application checks on the server
+whether each staff member is authorised to perform the requested
+operation. Authorised support staff can retrieve a response by its ID
+from Cloud SQL, and staff with report access can view daily reports
+stored in Cloud Storage through the application.
+
+During a survey campaign, the Cloud Run service adds instances as
+request volume increases and releases excess instances as traffic
+returns to normal. The service is configured with a maximum of
+\textbf{five instances} to control compute usage and reduce pressure
+on Cloud SQL connections during peak periods
+\parencite{cloud-run-max-instances}. Company A monitors the
+\textbf{container instance count} in Cloud Monitoring to determine
+whether the service approaches the configured limit during the
+campaign and scales down afterwards \parencite{cloud-run-monitoring}.
+
+Company A informs respondents of the purpose of data collection before
+they submit the survey, collects only the information necessary for
+that purpose, and uses HTTPS to protect responses in transit. Raw
+responses are stored in Cloud SQL, and the application returns only
+the fields needed to handle a support request. Cloud Scheduler
+triggers a Cloud Run job once a day to read the responses from Cloud
+SQL and write a report containing only aggregate rating counts to
+Cloud Storage. Under the case study's retention requirement, raw
+responses are deleted after three years, and backups containing
+personal data are subject to corresponding expiry rules. These
+measures support the Security and Retention Principles of Malaysia's
+Personal Data Protection Act (PDPA) \parencite{pdpa-principles}. If
+cross-region backups involve transferring personal data outside
+Malaysia, Company A must verify and meet the applicable cross-border
+transfer requirements before enabling those backups
+\parencite{pdpa-cross-border}.
