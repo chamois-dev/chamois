@@ -4,11 +4,10 @@
 
 GFS was a file system designed for storing large-scale data on thousands of inexpensive machines, where a single machine may lack sufficient capacity and disks are prone to fail routinely in practice. 
 Therefore, files are divided into fixed-size chunks, each of which can be placed, replicated and migrated independently.
-Since this fragmentation means that individual machines have no way of knowing where all the parts of a complete file are located, 
-after the client transfers data directly,
-the master node indexes chunk locations and directs clients to the appropriate machine.
-To handle the risk of hardware failure, each chunk is copied across multiple machines.
-When the master detects that replicas have fallen below a threshold, it will recreate them elsewhere.
+Since the fragments are spread across machines, no single machine knows where every part of a file resides. 
+A client therefore computes the chunk index from the file name and byte offset, 
+asks the master for the chunk handle and replica locations, 
+and then reads the bytes directly from a chunkserver.
 
 MapReduce addressed datasets too vast for a single machine and too difficult to partition manually.
 It targets aggregation by key, and such aggregation is separable, since partial counts computed in different places can be summed later without changing the total. 
@@ -31,7 +30,7 @@ Therefore, fields that are never used in a row do not occupy any space.
 
 
 \subsubsection{Current successors}
-None of GFS, MapReduce or Bigtable was replaced. 
+None of GFS, MapReduce or Bigtable was abandoned. 
 Each survives in a service that preserves the design while moving part of the work elsewhere. 
 Colossus still divides files into blocks and copies them, but it no longer records a chunk's location in a single node\cite{colossus2021}. 
 Spark keeps mapping records and merging them by key while holding intermediate results in memory rather than on disk\cite{sparkdocs}. 
